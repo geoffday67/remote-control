@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -37,6 +38,9 @@ public class GetDevices extends AsyncTask<Void, Void, JSONArray>
 		{
 			URL url = new URL(MainActivity.INTERFACE);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			final String basicAuth = "Basic " + Base64.encodeToString(MainActivity.authentication.getBytes(), Base64.NO_WRAP);
+			connection.setRequestProperty ("Authorization", basicAuth);
 
 			// Set POST method and send body data
 			connection.setDoOutput(true);

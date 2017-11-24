@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements View.OnLongClickListener
 {
 	public final static String INTERFACE = "http://192.168.1.5:1968/interface";
+	public final static String authentication = "wario:mansion1";
 
 	@SuppressWarnings("rawtypes")
 	private void getViewsByClass (ViewGroup root, Class target, ArrayList<View> result)
@@ -181,7 +183,10 @@ public class MainActivity extends Activity implements View.OnLongClickListener
         URL url = new URL (INTERFACE);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection ();
 
-        // Set POST method and send body data
+		final String basicAuth = "Basic " + Base64.encodeToString(MainActivity.authentication.getBytes(), Base64.NO_WRAP);
+		connection.setRequestProperty ("Authorization", basicAuth);
+
+		// Set POST method and send body data
         connection.setDoOutput (true);
         OutputStreamWriter writer = new OutputStreamWriter (connection.getOutputStream ());
         String body = String.format ("operation=433&channel=%d&command=%s", channel, command);
